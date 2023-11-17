@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+</head>
+<body>
+    Total Item Keranjang <span id="total-cart-item">0</span>
+    <button type="button" id="btn-checkout">Checkout</button>
+
+    <div id="product-section" style="display: none;">
+        <h2>Product List</h2>
+
+        <span id="product-list-state"></span>
+
+        <div id="product-container"></div>
+    </div>
+
+    <div id="checkout-section" style="display: none;">
+        <h2>Checkout</h2>
+
+        <div id="checkout-container"></div>
+    </div>
+
+    <script src="js/cart.js"></script>
+    <script src="js/product.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
