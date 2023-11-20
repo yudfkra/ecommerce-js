@@ -1,3 +1,5 @@
+const coupons = ['APPLY10', 'APPLY20'];
+
 const getCurrentCart = () => {
     let cart = [];
     try {
@@ -12,9 +14,16 @@ const countTotalItemInCart = () => getCurrentCart().reduce(
     (totalItem, product) => totalItem + product.quantity, 0
 );
 
+const countTotalItemInPrice = () => getCurrentCart().reduce(
+    (totalItem, product) => totalItem + product.total, 0
+);
+
 const renderTotalCart = () => {
     const elTotalCartItem = document.getElementById('total-cart-item');
     elTotalCartItem.innerText = countTotalItemInCart();
+
+    const elTotalCartPrice = document.getElementById('total-cart-price');
+    elTotalCartPrice.innerText = countTotalItemInPrice();
 }
 
 const addProductToCart = ({ id, name, price }, quantity, replace = false) => {
@@ -22,15 +31,21 @@ const addProductToCart = ({ id, name, price }, quantity, replace = false) => {
 
     const findProduct = currentCart.findIndex(product => product.id === id);
     if (findProduct !== -1) {
-        const existProduct = currentCart[findProduct];
-        const updatedQuantity = replace ? parseInt(quantity) : parseInt(existProduct.quantity) + parseInt(quantity);
-        const updatedTotal = updatedQuantity * price;
-        const updateProduct = { ...existProduct, price: price, quantity: updatedQuantity, total: updatedTotal  }
+        if (quantity >= 1) {
+            const existProduct = currentCart[findProduct];
+            const updatedQuantity = replace ? parseInt(quantity) : parseInt(existProduct.quantity) + parseInt(quantity);
+            const updatedTotal = updatedQuantity * price;
+            const updateProduct = { ...existProduct, price: price, quantity: updatedQuantity, total: updatedTotal }
 
-        currentCart[findProduct] = updateProduct;
+            currentCart[findProduct] = updateProduct;   
+        }
+
+        if (quantity === 0) {
+            currentCart.splice(findProduct, 1);
+        }
     }
 
-    if (findProduct === -1) {
+    if (findProduct === -1 && quantity >= 1) {
         currentCart.push({ id, name, price, quantity, total: price * quantity });
     }
 
@@ -38,7 +53,10 @@ const addProductToCart = ({ id, name, price }, quantity, replace = false) => {
     renderTotalCart();
 };
 
-const renderCartProduct = () => {
+const renderCartProduct = (username) => {
+    const elUsername = document.getElementById('checkout-username');
+    elUsername.innerText = username;
+
     const columns = ['Name', 'Price', 'Action', 'Total'];
 
     const elCheckoutContainer = document.getElementById('checkout-container');
@@ -75,7 +93,7 @@ const renderCartProduct = () => {
             elInputNumber.type = 'number';
             elInputNumber.id = `input-product-quantity-${product.id}`;
             elInputNumber.name = `quantity[${product.id}]`;
-            elInputNumber.min = 1;
+            elInputNumber.min = 0;
             elInputNumber.max = 100;
             elInputNumber.step = 1;
             elInputNumber.value = product.quantity;
@@ -89,12 +107,9 @@ const renderCartProduct = () => {
             elBtnUpdate.addEventListener('click', function (e) {
                 e.preventDefault();
                 const quantity = parseInt(elInputNumber.value);
-                if (quantity <= 0) {
-                    return;
-                }
 
                 addProductToCart(product, quantity, true);
-                renderCartProduct();
+                renderCartProduct(username);
             });
             tdAction.appendChild(elBtnUpdate);
 

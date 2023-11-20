@@ -6,7 +6,7 @@
     <title>Shop</title>
 </head>
 <body>
-    Total Item Keranjang <span id="total-cart-item">0</span>
+    Total Item Keranjang <span id="total-cart-item">0</span> | <span id="total-cart-price">0</span>
     <button type="button" id="btn-checkout">Checkout</button>
 
     <div id="product-section" style="display: none;">
@@ -19,6 +19,10 @@
 
     <div id="checkout-section" style="display: none;">
         <h2>Checkout</h2>
+
+        <p>
+            Username : <span id="checkout-username">-</span>
+        </p>
 
         <div id="checkout-container"></div>
     </div>

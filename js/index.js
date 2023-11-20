@@ -1,4 +1,6 @@
 (async () => {
+    const username = 'TEST-NEURON';
+
     const elBtnCheckout = document.getElementById('btn-checkout');
     const elCheckoutSection = document.getElementById('checkout-section');
     const toggleCheckoutSection = (show) => elCheckoutSection.style.display = show ? 'block' : 'none';
@@ -16,7 +18,7 @@
         toggleProductSection(false);
         
         toggleCheckoutSection(true);
-        renderCartProduct();
+        renderCartProduct(username);
     });
 
     toggleProductSection(true);
@@ -24,7 +26,7 @@
 
     const [error, products] = await loadProductData().finally(() => toggleProductListState(false));
     if (error) {
-        elProductListState.innerText = 'Gagal mendapatkan data product, silahkan coba dalam beberapa saat lagi.';
+        elProductListState.innerText = error;
         elProductListState.style.display = 'block';
     }
     renderProduct(products || []);
